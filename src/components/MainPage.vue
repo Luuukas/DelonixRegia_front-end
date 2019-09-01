@@ -91,9 +91,9 @@
 
     <div class="layui-body">
       <!-- 内容主体区域 -->
-      <div style="padding: 15px;height:96%">
+      <div style="padding: 15px;height:96%" v-if="subpRefresh">
         <keep-alive>
-          <router-view v-if="subpRefresh" />
+          <router-view/>
         </keep-alive>
       </div>
     </div>
@@ -173,11 +173,10 @@ export default {
         res = res.data;
         if (res.msg == "true") {
           this.$store.dispatch("asetId", res.user_id);
-          this.$store.dispatch("asetName", res.name);
           this.$store.dispatch("asetImgUrl", res.imgurl);
           this.$store.dispatch("asetIdentity", res.identity);
           $(this.$refs.user_imgurl).attr("src", res.imgurl);
-          $(this.$refs.name).text(res.name);
+          $(this.$refs.user_name).text(res.name);
           layer.msg("欢迎回来 " + res.name, {
             icon: 1,
             time: 2000

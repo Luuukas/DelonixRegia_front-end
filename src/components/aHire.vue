@@ -166,7 +166,7 @@ export default {
       $(this.$refs.edu_require).val(info.edu_require);
       $(this.$refs.exp_require).val(info.exp_require);
       $(this.$refs.want_num).val(info.want_num);
-      $(this.$refs.descripe).text(info.descripe);
+      $(this.$refs.descripe).text(info.description);
       $(this.$refs.place).text(info.place);
       $(this.$refs.detail_url).attr("href", info.detail_url);
     },

@@ -25,6 +25,7 @@ export default {
         elem: "#pick_resume",
         auto: false,
         bindAction: "#upload_resume",
+        exts:'pdf|doc|docx|ppt|pptx',
         url: this_vue.$store.getters.getBaseUrl + "/user/uploadresume/",
         data: {
           // name: $(this_vue.$refs.resume_name).val(),

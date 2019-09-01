@@ -3,7 +3,7 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 const state = {   //要设置的全局访问的state对象
     userid : null,
-    username : null,
+    username : null,    // the unique username
     userimgurl : null, 
     userIdentity : null,
     token : false,

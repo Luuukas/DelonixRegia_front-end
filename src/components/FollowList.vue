@@ -24,22 +24,23 @@ export default {
     return {
       refreshSeaList: false,
       showList: false,
-      friends: [
-        {
-          imgurl: "../../static/pics/997073.png",
-          gender: "M",
-          name: "Lukas",
-          id: 0
-        }
-      ],
-      seafriends: [
-        {
-          imgurl: "../../static/pics/997073.png",
-          gender: "M",
-          name: "Lukas",
-          id: 0
-        }
-      ]
+      // friends: [
+      //   {
+      //     imgurl: "../../static/pics/997073.png",
+      //     gender: "M",
+      //     name: "Lukas",
+      //     id: 0
+      //   }
+      // ],
+      // seafriends: [
+      //   {
+      //     imgurl: "../../static/pics/997073.png",
+      //     gender: "M",
+      //     name: "Lukas",
+      //     id: 0
+      //   }
+      // ]
+      friends : []
     };
   },
   components: {

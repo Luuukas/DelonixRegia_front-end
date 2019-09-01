@@ -108,6 +108,8 @@ export default {
           if(res.msg=="true"){
                 setCookie("sessionid",res.sessionid,1000 * 60 * 60)   //return this
                 setCookie("identity",res.identity,1000 * 60 * 60)   //return this
+                this.$store.dispatch("asetName", this.username);
+                setCookie("username",this.username,1000 * 60 * 60)   //return this
                 console.log(getCookie('sessionid'));
                 this.$store.dispatch("asetIdentity", res.identity);
                 this.$store.dispatch("asetToken", true);

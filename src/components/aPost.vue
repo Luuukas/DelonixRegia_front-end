@@ -36,9 +36,10 @@
       <div class="layui-colla-item">
         <h2 class="layui-colla-title arrow_toright">
           评论
-          <label style="float:right" @click="defaultNewComment">✚</label>
+          <label style="float:right;margin-right:10px" @click="defaultNewComment">✚</label>
+          <label style="float:right;margin-right:10px" @click="onlyRefreshComs">↺</label>
         </h2>
-        <div class="layui-colla-content">
+        <div class="layui-colla-content" v-if="comsRefresh">
           <aCom v-for="(comment,index) in post.comments" :key="index" :comment="comment"></aCom>
         </div>
       </div>
@@ -48,12 +49,16 @@
 </template>
 
 <script>
+import { getCookie } from "../util/util.js"; //引用刚才我们创建的util.js文件，并使用getCookie方法
+import { setCookie } from "../util/util.js";
+import { delCookie } from "../util/util.js";
 import aCom from "./aComment";
 import PMPs from "./PreviewMultiPics";
 export default {
   data() {
     return {
-      owner: this.post.owner
+      owner: this.post.owner,
+      comsRefresh: true
     };
   },
   props: {
@@ -77,10 +82,11 @@ export default {
       $(this.$refs.content).text(post.content);
     },
     defaultNewComment: function(event) {
-      event.stopPropagation();    // 阻止点击事件冒泡
-      this.newComment(this.owner);
+      event.stopPropagation(); // 阻止点击事件冒泡
+      this.newComment(this.post.name_lab, this.owner);
     },
-    newComment: function(to) {
+    newComment: function(to,tousername) {
+      let this_vue = this;
       layer.open({
         id: 1,
         type: 1,
@@ -95,14 +101,38 @@ export default {
           "</label>" +
           "</div>" +
           '<div class="row" style="width: 420px;  margin-left:7px; margin-top:10px;">' +
-          '<textarea placeholder="请输入内容"></textarea>' +
+          '<textarea placeholder="请输入内容" id="comment_content"></textarea>' +
           "</div>",
         btn: ["发送", "取消"],
         btn1: function(index, layero) {
-          layer.msg("发送失败", {
-            icon: 2,
-            time: 1000 //2秒关闭（如果不配置，默认是3秒）
-          });
+          var json = {
+            sessionid: getCookie("sessionid"),
+            postid: this_vue.post.post_id,
+            poster_name: tousername,
+            content: $("#comment_content").val()
+          };
+          this_vue.$http
+            .post(
+              this_vue.$store.getters.getBaseUrl +
+                "/friendcircle/uploadcomment/",
+              JSON.stringify(json)
+            )
+            .then(res => {
+              res = res.data;
+              if (res.msg == "true") {
+                this.onlyRefreshComs();
+                layer.close(index);
+                layer.msg("发布评论成功！", {
+                  icon: 1,
+                  time: 2000
+                });
+              } else {
+                layer.msg("发布评论失败！", {
+                  icon: 2,
+                  time: 2000
+                });
+              }
+            });
         },
         btn2: function(index, layero) {
           layer.close(index);
@@ -122,6 +152,42 @@ export default {
         $(h2t).removeClass("arrow_todown");
         $(h2t).addClass("arrow_toright");
       }
+    },
+    refreshComs: function() {
+      // 移除组件
+      this.comsRefresh = false;
+      // 在组件移除后，重新渲染组件
+      // this.$nextTick可实现在DOM 状态更新后，执行传入的方法。
+      this.$nextTick(() => {
+        this.comsRefresh = true;
+      });
+    },
+    onlyRefreshComs: function() {
+      var json = {
+        sessionid: getCookie("sessionid"),
+        postid: this.post.post_id
+      };
+      this.$http
+        .post(
+          this.$store.getters.getBaseUrl + "/friendcircle/getpostcomments/",
+          JSON.stringify(json)
+        )
+        .then(res => {
+          res = res.data;
+          if (res.msg == "true") {
+            layer.msg("刷新评论成功！", {
+              icon: 1,
+              time: 2000
+            });
+            this.post.comments = res.comments;
+            this.refreshComs();
+          } else {
+            layer.msg("刷新评论失败！", {
+              icon: 2,
+              time: 2000
+            });
+          }
+        });
     }
   }
 };
