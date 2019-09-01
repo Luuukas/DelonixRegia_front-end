@@ -4,7 +4,7 @@
       <legend @click="refresh">Refresh</legend>
     </fieldset>
     <div v-if="postsRefresh">
-    <aP v-for="(post,index) in posts" :key="index" :post="post"></aP>
+      <aP v-for="(post,index) in posts" :key="index" :post="post"></aP>
     </div>
   </div>
 </template>
@@ -17,29 +17,30 @@ import aP from "./aPost";
 export default {
   data() {
     return {
-      postsRefresh : true,
-      posts: [
-        {
-          pics_url: [
-            "../../static/pics/137685.jpg",
-            "../../static/pics/953900.jpg",
-            "../../static/pics/997073.png"
-          ],
-          img_url: "../../static/pics/137685.jpg",
-          name_lab: "Luuukas",
-          time_lab: "2019-08-29",
-          title: "表扬一下自己",
-          content: "我真的好棒棒啊！",
-          comments: [
-            {
-              from: "Jack1",
-              to: "Luuukas",
-              content: "I agree with you!"
-            }
-          ],
-          owner: "Luuukas1"
-        }
-      ]
+      postsRefresh: true,
+      // posts: [
+      //   {
+      //     pics_url: [
+      //       "../../static/pics/137685.jpg",
+      //       "../../static/pics/953900.jpg",
+      //       "../../static/pics/997073.png"
+      //     ],
+      //     img_url: "../../static/pics/137685.jpg",
+      //     name_lab: "Luuukas",
+      //     time_lab: "2019-08-29",
+      //     title: "表扬一下自己",
+      //     content: "我真的好棒棒啊！",
+      //     comments: [
+      //       {
+      //         from: "Jack1",
+      //         to: "Luuukas",
+      //         content: "I agree with you!"
+      //       }
+      //     ],
+      //     owner: "Luuukas1"
+      //   }
+      // ]
+      posts : []
     };
   },
   components: {
@@ -80,7 +81,7 @@ export default {
       .then(res => {
         res = res.data;
         if (res.msg == "true") {
-          this.posts= res.allpost;
+          this.posts = res.allpost;
           this.refreshPosts();
         } else {
           layer.msg("获取动态失败！", {
@@ -94,7 +95,7 @@ export default {
     refresh: function() {
       this.$parent.refreshSubPage();
     },
-    refreshPosts: function(){
+    refreshPosts: function() {
       // 移除组件
       this.postsRefresh = false;
       // 在组件移除后，重新渲染组件

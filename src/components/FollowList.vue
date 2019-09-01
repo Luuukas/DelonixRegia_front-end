@@ -6,9 +6,14 @@
         <a ref="sfhook" href="javascript:;" @click="searchFriend" class="black_arrow_toright">搜索好友</a>
       </dd>
       <div v-if="refreshSeaList">
-        <aF v-for="(info,index) in seafriends" :key="index" :info="info" :stype="1"></aF>
+        <aF v-for="(info,index) in seafriends" :key="index" :info="info" :stype="2"></aF>
       </div>
-      <aF v-for="(info,index) in friends" :key="index" :info="info" :stype="0"></aF>
+      <aF
+        v-for="(info,index) in friends"
+        :key="index"
+        :info="info"
+        :stype="(list_name=='关注列表'?0:1)"
+      ></aF>
     </dl>
   </li>
 </template>
@@ -40,7 +45,7 @@ export default {
       //     id: 0
       //   }
       // ]
-      friends : []
+      friends: []
     };
   },
   components: {
@@ -83,7 +88,7 @@ export default {
         }
       });
   },
-  mounted(){
+  mounted() {
     $(this.$refs.list_name).text(this.list_name);
   },
   methods: {
@@ -97,9 +102,7 @@ export default {
       });
     },
     searchFriend: function() {
-      if ($(this.$refs.sfhook).hasClass("black_arrow_todown")) {
-        $(this.$refs.sfhook).removeClass("black-arrow_todown");
-        $(this.$refs.sfhook).addClass("black_arrow_toright");
+      if (this.refreshSeaList) {
         this.refreshSeaList = false;
         return;
       } else {
@@ -123,7 +126,8 @@ export default {
           btn: ["搜索", "取消"],
           btn1: function(index, layero) {
             var json = {
-              key: $("#searchclue").val()
+              key: $("#searchclue").val(),
+              sessionid: getCookie("sessionid")
             };
             this_vue.$http
               .post(
@@ -146,8 +150,6 @@ export default {
                   });
                   this_vue.seafriends = res.users;
                   this_vue.refreshSeaFriendList();
-                  $(this_vue.$refs.sfhook).removeClass("black_arrow_toright");
-                  $(this_vue.$refs.sfhook).addClass("black_arrow_todown");
                 } else {
                   layer.msg("搜索失败！", {
                     icon: 2,
@@ -173,6 +175,29 @@ export default {
         this.showList = true;
         $(at).removeClass("arrow_toright");
         $(at).addClass("arrow_todown");
+      }
+    },
+    switchStateBlack: function(event) {
+      var at = event.currentTarget;
+      if (this.showList) {
+        this.showList = false;
+        $(at).removeClass("arrow_todown");
+        $(at).addClass("arrow_toright");
+      } else {
+        this.showList = true;
+        $(at).removeClass("arrow_toright");
+        $(at).addClass("arrow_todown");
+      }
+    }
+  },
+  watch:{
+    refreshSeaList(val){
+      if(this.refreshSeaList){
+        $(this.$refs.sfhook).removeClass("black_arrow_toright");
+        $(this.$refs.sfhook).addClass("black_arrow_todown");
+      }else{
+        $(this.$refs.sfhook).removeClass("black_arrow_todown");
+        $(this.$refs.sfhook).addClass("black_arrow_toright");
       }
     }
   }

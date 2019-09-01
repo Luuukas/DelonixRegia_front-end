@@ -106,13 +106,13 @@
     </div>
 
     <div>
-      <div class="layui-colla-item">
+      <div class="layui-colla-item" @click="switchState">
         <h2 class="layui-colla-title arrow_toright">职位描述</h2>
         <div class="layui-colla-content">
           <p ref="descripe"></p>
         </div>
       </div>
-      <div class="layui-colla-item">
+      <div class="layui-colla-item" @click="switchState">
         <h2 class="layui-colla-title arrow_toright">工作地点</h2>
         <div class="layui-colla-content">
           <p ref="place"></p>
@@ -150,7 +150,7 @@ export default {
   },
   mounted() {
     this.fillaHire(this.info);
-    $(".layui-colla-item").on("click", this.switchState);
+    // $(".layui-colla-item").on("click", this.switchState);
   },
   beforeCreated() {
     this.fillaHire(this.info);
@@ -206,7 +206,8 @@ export default {
             text: this_vue.$store.getters.getName + "给你发了份简历！",
             headline: "查收简历",
             // cid: this_vue.info.cid
-            cid : 2
+            cid : this_vue.info.cid,
+            postid : this_vue.info.id
           };
 
           this_vue.$http
@@ -218,6 +219,7 @@ export default {
             .then(res => {
               res = res.data;
               if (res.msg == "true") {
+                layer.close(index);
                 layer.msg("发送成功！", {
                   icon: 1,
                   time: 2000 //2秒关闭（如果不配置，默认是3秒）

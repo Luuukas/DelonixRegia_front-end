@@ -5,8 +5,8 @@
     <router-link to="ViewProfile">
       <a href="javascript:;" ref="name" style="width:75px">...</a>
     </router-link>
-    <label style="margin-right:10px" v-if="stype==1" @click="following">☆</label>
-    <label style="margin-right:10px" v-if="stype==0">ㄨ</label>
+    <label style="margin-right:10px" v-if="stype==2&&info.canfollow=='true'" @click="following">☆</label>
+    <label style="margin-right:10px" v-if="stype==0" @click="removingFriend">ㄨ</label>
   </dd>
 </template>
 
@@ -22,6 +22,10 @@ export default {
   },
   props: {
     info: Object,
+
+    // 0: 关注的人
+    // 1: 粉丝
+    // 2: 搜索结果
     stype: Number
   },
   mounted() {
@@ -57,18 +61,44 @@ export default {
               time: 2000
             });
             this.removeThisFriend = false;
-          } else if(res.msg=="false"){
+          } else if (res.msg == "false") {
             layer.msg("关注失败！", {
               icon: 2,
               time: 2000
             });
-          }else{
+          } else {
             layer.msg("会话超时！", {
               icon: 2,
               time: 2000
             });
             // window.location=this_vue.$store.getters.getBaseUrl+"/login";
             window.location = "http://127.0.0.1:8080";
+          }
+        });
+    },
+    removingFriend: function() {
+      var json = {
+        fid:this.info.id,
+        sessionid: getCookie("sessionid")
+      };
+      this.$http
+        .post(
+          this.$store.getters.getBaseUrl + "/user/unfollow/",
+          JSON.stringify(json)
+        )
+        .then(res => {
+          res = res.data;
+          if (res.msg == "true") {
+            layer.msg("取关成功！", {
+              icon: 1,
+              time: 2000
+            });
+            this.removeThisFriend = false;
+          } else {
+            layer.msg("取关失败！", {
+              icon: 2,
+              time: 2000
+            });
           }
         });
     }
