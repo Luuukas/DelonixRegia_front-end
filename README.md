@@ -26,7 +26,7 @@
 
 ## 文件结构
 
-总的文件结构是由vue-cli生成的，主要介绍个别几个总要的目录。
+总的文件结构是由vue-cli生成的，主要介绍个别几个重要的目录。
 
 ```bash
 ./DelonixRegia_front-end/src/components    ——    该目录下为各种自定义的组件
@@ -76,7 +76,7 @@ import { delCookie } from "../util/util.js";
 ## 运行
 ```
 安装好Node.js环境后
-cd到Delonix_front-end目录下
+cd到DelonixRegia_front-end目录下
 
 # install dependencies
 npm install
